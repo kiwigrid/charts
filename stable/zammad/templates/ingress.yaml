@@ -10,14 +10,14 @@ metadata:
     chart: {{ template "zammad.chart" . }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
-{{- with .Values.ingress.annotations }}
+{{- with .Values.zammad.ingress.annotations }}
   annotations:
 {{ toYaml . | indent 4 }}
 {{- end }}
 spec:
-{{- if .Values.ingress.tls }}
+{{- if .Values.zammad.ingress.tls }}
   tls:
-  {{- range .Values.ingress.tls }}
+  {{- range .Values.zammad.ingress.tls }}
     - hosts:
       {{- range .hosts }}
         - {{ . }}
@@ -26,7 +26,7 @@ spec:
   {{- end }}
 {{- end }}
   rules:
-  {{- range .Values.ingress.hosts }}
+  {{- range .Values.zammad.ingress.hosts }}
     - host: {{ . }}
       http:
         paths:

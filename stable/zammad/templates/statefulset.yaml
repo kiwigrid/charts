@@ -21,30 +21,30 @@ spec:
     spec:
       initContainers:
       - name: {{ .Chart.Name }}-init
-        image: {{ .Values.image.repository }}:zammad-{{ .Values.image.tag }}
+        image: {{ .Values.zammad.image.repository }}:zammad-{{ .Values.zammad.image.tag }}
         args: [ "zammad-init" ]
         env:
-        {{- range $key, $value := .Values.env }}
+        {{- range $key, $value := .Values.zammad.env }}
         - name: "{{ $key }}"
           value: "{{ $value }}"
         {{- end }}
-        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        imagePullPolicy: {{ .Values.zammad.image.pullPolicy }}
         volumeMounts:
          - name: {{ template "zammad.fullname" . }}
            mountPath: /opt/zammad
       containers:
       - name: {{ .Chart.Name }}-nginx
-        image: {{ .Values.image.repository }}:zammad-{{ .Values.image.tag }}
+        image: {{ .Values.zammad.image.repository }}:zammad-{{ .Values.zammad.image.tag }}
         args: [ "zammad-nginx" ]
         env:
-        {{- range $key, $value := .Values.env }}
+        {{- range $key, $value := .Values.zammad.env }}
         - name: "{{ $key }}"
           value: "{{ $value }}"
         {{- end }}
         ports:
         - containerPort: 80
           name: nginx
-        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        imagePullPolicy: {{ .Values.zammad.image.pullPolicy }}
         volumeMounts:
          - name: {{ template "zammad.fullname" . }}
            mountPath: /opt/zammad
@@ -63,16 +63,16 @@ spec:
           initialDelaySeconds: 60
           periodSeconds: 10
           resources:
-{{ toYaml .Values.resources.nginx | indent 12 }}
+{{ toYaml .Values.zammad.resources.nginx | indent 12 }}
       - name: {{ .Chart.Name }}-railsserver
-        image: {{ .Values.image.repository }}:zammad-{{ .Values.image.tag }}
+        image: {{ .Values.zammad.image.repository }}:zammad-{{ .Values.zammad.image.tag }}
         args: ["zammad-railsserver"]
         env:
-        {{- range $key, $value := .Values.env }}
+        {{- range $key, $value := .Values.zammad.env }}
         - name: "{{ $key }}"
           value: "{{ $value }}"
         {{- end }}
-        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        imagePullPolicy: {{ .Values.zammad.image.pullPolicy }}
         ports:
         - name: railsserver
           containerPort: 3000
@@ -92,26 +92,26 @@ spec:
           initialDelaySeconds: 90
           periodSeconds: 10
           resources:
-{{ toYaml .Values.resources.railsserver | indent 12 }}
+{{ toYaml .Values.zammad.resources.railsserver | indent 12 }}
       - name: {{ .Chart.Name }}-scheduler
-        image: {{ .Values.image.repository }}:zammad-{{ .Values.image.tag }}
+        image: {{ .Values.zammad.image.repository }}:zammad-{{ .Values.zammad.image.tag }}
         args: [ "zammad-scheduler" ]
         env:
-        {{- range $key, $value := .Values.env }}
+        {{- range $key, $value := .Values.zammad.env }}
         - name: "{{ $key }}"
           value: "{{ $value }}"
         {{- end }}
-        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        imagePullPolicy: {{ .Values.zammad.image.pullPolicy }}
         volumeMounts:
          - name: {{ template "zammad.fullname" . }}
            mountPath: /opt/zammad
            resources:
-{{ toYaml .Values.resources.scheduler | indent 12 }}
+{{ toYaml .Values.zammad.resources.scheduler | indent 12 }}
       - name: {{ .Chart.Name }}-websocket
-        image: {{ .Values.image.repository }}:zammad-{{ .Values.image.tag }}
+        image: {{ .Values.zammad.image.repository }}:zammad-{{ .Values.zammad.image.tag }}
         args: [ "zammad-websocket" ]
         env:
-        {{- range $key, $value := .Values.env }}
+        {{- range $key, $value := .Values.zammad.env }}
         - name: "{{ $key }}"
           value: "{{ $value }}"
         {{- end }}
@@ -133,16 +133,16 @@ spec:
           initialDelaySeconds: 60
           periodSeconds: 10
           resources:
-{{ toYaml .Values.resources.websocket | indent 12 }}
-    {{- with .Values.nodeSelector }}
+{{ toYaml .Values.zammad.resources.websocket | indent 12 }}
+    {{- with .Values.zammad.nodeSelector }}
       nodeSelector:
 {{ toYaml . | indent 8 }}
     {{- end }}
-    {{- with .Values.affinity }}
+    {{- with .Values.zammad.affinity }}
       affinity:
 {{ toYaml . | indent 8 }}
     {{- end }}
-    {{- with .Values.tolerations }}
+    {{- with .Values.zammad.tolerations }}
       tolerations:
 {{ toYaml . | indent 8 }}
     {{- end }}
@@ -151,9 +151,9 @@ spec:
         configMap:
           name: {{ template "zammad.fullname" . }}-nginx
       - name: {{ template "zammad.fullname" . }}
-      {{- if .Values.persistence.enabled }}
+      {{- if .Values.zammad.persistence.enabled }}
         persistentVolumeClaim:
-          claimName: {{ .Values.persistence.existingClaim | default (include "zammad.fullname" .) }}
+          claimName: {{ .Values.zammad.persistence.existingClaim | default (include "zammad.fullname" .) }}
       {{- else }}
         emptyDir: {}
       {{- end -}}

@@ -8,9 +8,9 @@ metadata:
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
 spec:
-  type: {{ .Values.service.type }}
+  type: {{ .Values.zammad.service.type }}
   ports:
-    - port: {{ .Values.service.port }}
+    - port: {{ .Values.zammad.service.port }}
       targetPort: http
       protocol: TCP
       name: http

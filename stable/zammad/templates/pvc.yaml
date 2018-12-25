@@ -10,15 +10,15 @@ metadata:
     chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
 spec:
   accessModes:
-    - {{ .Values.persistence.accessMode | quote }}
+    - {{ .Values.zammad.persistence.accessMode | quote }}
   resources:
     requests:
-      storage: {{ .Values.persistence.size | quote }}
-{{- if .Values.persistence.storageClass }}
-{{- if (eq "-" .Values.persistence.storageClass) }}
+      storage: {{ .Values.zammad.persistence.size | quote }}
+{{- if .Values.zammad.persistence.storageClass }}
+{{- if (eq "-" .Values.zammad.persistence.storageClass) }}
   storageClassName: ""
 {{- else }}
-  storageClassName: "{{ .Values.persistence.storageClass }}"
+  storageClassName: "{{ .Values.zammad.persistence.storageClass }}"
 {{- end }}
 {{- end }}
 {{- end }}
